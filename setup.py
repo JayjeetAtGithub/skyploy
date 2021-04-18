@@ -7,7 +7,7 @@ from subprocess import call
 
 from setuptools import Command, find_packages, setup
 
-from skele import __version__
+from skyploy import __version__
 
 
 this_dir = abspath(dirname(__file__))
@@ -28,16 +28,16 @@ class RunTests(Command):
 
     def run(self):
         """Run all tests!"""
-        errno = call(['py.test', '--cov=skele', '--cov-report=term-missing'])
+        errno = call(['py.test', '--cov=skyploy', '--cov-report=term-missing'])
         raise SystemExit(errno)
 
 
 setup(
-    name = 'skele',
+    name = 'skyploy',
     version = __version__,
     description = 'A skeleton command line program in Python.',
     long_description = long_description,
-    url = 'https://github.com/rdegges/skele-cli',
+    url = 'https://github.com/rdegges/skyploy-cli',
     author = 'Randall Degges',
     author_email = 'r@rdegges.com',
     license = 'UNLICENSE',
@@ -63,7 +63,7 @@ setup(
     },
     entry_points = {
         'console_scripts': [
-            'skele=skele.cli:main',
+            'skyploy=skyploy.cli:main',
         ],
     },
     cmdclass = {'test': RunTests},

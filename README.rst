@@ -1,4 +1,4 @@
-skele-cli
+skyploy-cli
 =========
 
 *A skeleton command line program in Python.*
