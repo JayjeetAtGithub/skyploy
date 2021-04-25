@@ -39,7 +39,7 @@ class Do(Base):
         print(cmd)
         self._execute(cmd)
 
-        cmd = ["ceph-deploy", "mon", "create-initial"]
+        cmd = ["ceph-deploy", "mon", "create-initial", "--overwrite-conf"]
         print(cmd)
         self._execute(cmd)
 
@@ -74,6 +74,7 @@ class Do(Base):
         config_dict = self._read_config(config_file_path)
         self.config_dict = config_dict
         print(self.config_dict)
+        self._cleanup()
         self._prepare_admin()
         self._install_daemons()
         self._create_mon()
