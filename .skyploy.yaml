@@ -1,4 +1,5 @@
 version: octopus
+public_network: 10.10.1.0/16
 
 admin:
 - node0

@@ -48,6 +48,9 @@ class Do(Base):
         print(cmd)
         self._execute(cmd)
 
+        with open("ceph.conf", 'a') as f:
+            f.write(f"public_network = {self.config_dict["public_network"]}")
+
         cmd = ["ceph-deploy", "--overwrite-conf", "mon", "create-initial"]
         print(cmd)
         self._execute(cmd)
