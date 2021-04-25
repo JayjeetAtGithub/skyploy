@@ -1,0 +1,27 @@
+version: octopus
+
+admin:
+- node0
+
+mon:
+- node1
+- node2
+- node3
+
+mgr:
+- node1
+
+mds:
+- node1
+- node2
+
+osd:
+  hosts:
+  - node1
+  - node2
+  - node3
+  - node4
+  conf:
+    type: bluestore
+    size: 50GB
+    disk: /dev/nvmen01p4
