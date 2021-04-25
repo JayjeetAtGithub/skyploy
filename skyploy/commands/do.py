@@ -14,7 +14,10 @@ class Do(Base):
     
     def _purge_cluster(self):
         cmd = ["ceph-deploy", "purge"]
-        cmd.extend(self.config_dict["osd"])
+        cmd.extend(self.config_dict["osd"]["hosts"])
+        cmd.extend(self.config_dict["mon"])
+        cmd.extend(self.config_dict["mgr"])
+        cmd.extend(self.config_dict["mds"])
         print(cmd)
         self._execute(cmd)
 
