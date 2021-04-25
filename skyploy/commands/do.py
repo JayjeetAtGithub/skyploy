@@ -11,6 +11,15 @@ class Do(Base):
         with open(filepath, 'r') as f:
             data = yaml.load(f, Loader=yaml.FullLoader)
             return data
+    
+    def _purge_cluster(self):
+        cmd = ["ceph-deploy", "purge"]
+        cmd.extend(self.config_dict["osd"])
+        cmd.extend(self.config_dict["mon"])
+        cmd.extend(self.config_dict["mgr"])
+        cmd.extend(self.config_dict["mds"])
+        print(cmd)
+        self._execute(cmd)
 
     def _install_ceph_deploy(self):
         # check if ceph-deploy already cloned
