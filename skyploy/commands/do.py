@@ -18,7 +18,7 @@ class Do(Base):
             cmd = ["git", "clone", "https://github.com/ceph/ceph-deploy", "/tmp/ceph-deploy"]
             self._execute(cmd)
 
-        cmd = ["pip", "install", "--upgrade", "/tmp/ceph-deploy"]
+        cmd = ["pip3", "install", "--upgrade", "/tmp/ceph-deploy"]
         self._execute(cmd)
 
     def _prepare_admin(self):
