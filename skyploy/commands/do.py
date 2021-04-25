@@ -37,13 +37,16 @@ class Do(Base):
         cmd = ["ceph-deploy", "new"]
         cmd.extend(self.config_dict["mon"])
         print(cmd)
+        self._execute(cmd)
 
         cmd = ["ceph-deploy", "mon", "create-initial"]
         print(cmd)
+        self._execute(cmd)
 
         cmd = ["ceph-deploy", "admin"]
         cmd.extend(self.config_dict["mon"])
         print(cmd)
+        self._execute(cmd)
 
     def _install_daemons(self):
         # change into the working dir
@@ -52,6 +55,7 @@ class Do(Base):
         cmd = ["ceph-deploy", "install", "--release", self.config_dict["version"]]
         cmd.extend(self.config_dict["osd"]["hosts"])
         print(cmd)
+        self._execute(cmd)
 
     def _create_mgr(self):
         # change into the working dir
@@ -60,6 +64,7 @@ class Do(Base):
         cmd = ["ceph-deploy", "mgr", "create"]
         cmd.extend(self.config_dict["mgr"])
         print(cmd)
+        self._execute(cmd)
 
     def _create_mds(self):
         pass
