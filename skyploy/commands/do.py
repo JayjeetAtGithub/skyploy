@@ -39,7 +39,7 @@ class Do(Base):
         print(cmd)
         self._execute(cmd)
 
-        cmd = ["ceph-deploy", "mon", "create-initial", "--overwrite-conf"]
+        cmd = ["ceph-deploy", "--overwrite-conf", "mon", "create-initial"]
         print(cmd)
         self._execute(cmd)
 
