@@ -17,7 +17,7 @@ class Base(object):
 
     def _check_not_ok(self, e, msg):
         if e != 0:
-            logger.error(msg)
+            logging.error(msg)
             sys.exit(e)
 
     def _execute(self, cmd, env=None, cwd=os.getcwd(), pids=set(), log=True):
