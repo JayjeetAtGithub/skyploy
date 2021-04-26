@@ -38,14 +38,14 @@ class Run(Base):
 
         cmd = ["ceph-deploy", "new"]
         cmd.extend(self._config_dict["mon"])
-        self._execute(cmd)
+        self._execute(cmd, cwd=self._working_dir)
 
         cmd = ["ceph-deploy", "--overwrite-conf", "mon", "create-initial"]
-        self._execute(cmd)
+        self._execute(cmd, cwd=self._working_dir)
 
         cmd = ["ceph-deploy", "admin"]
         cmd.extend(self._config_dict["mon"])
-        self._execute(cmd)
+        self._execute(cmd, cwd=self._working_dir)
 
     def _copy_config(self):
         shutil.copyfile(
@@ -57,12 +57,12 @@ class Run(Base):
     def _install_daemons(self):
         cmd = ["ceph-deploy", "install", "--release", self._config_dict["version"]]
         cmd.extend(self._config_dict["osd"]["hosts"])
-        self._execute(cmd)
+        self._execute(cmd, cwd=self._working_dir)
 
     def _create_mgr(self):
         cmd = ["ceph-deploy", "mgr", "create"]
         cmd.extend(self._config_dict["mgr"])
-        self._execute(cmd)
+        self._execute(cmd, cwd=self._working_dir)
 
     def _create_mds(self):
         pass
@@ -71,7 +71,6 @@ class Run(Base):
         config_file_path = str(self.options['<config>'])
         _config_dict = self._read_config(config_file_path)
         self._config_dict = _config_dict
-        os.chdir(self._working_dir)
         self._prepare_admin()
         self._install_daemons()
         self._create_mons()
