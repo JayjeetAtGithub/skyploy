@@ -28,7 +28,7 @@ class Run(Base):
         self._execute(cmd)
 
     def _prepare_admin(self):
-        shutil.rmtree(self._working_dir)
+        shutil.rmtree(self._working_dir, ignore_errors=True)
         os.mkdir(self._working_dir)
         self._install_ceph_deploy()
 
@@ -48,6 +48,8 @@ class Run(Base):
         self._execute(cmd, cwd=self._working_dir)
 
     def _copy_config(self):
+        if self._is_dev():
+            return
         shutil.copyfile(
             os.path.join(self._working_dir, 'ceph.conf'), '/etc/ceph/ceph.conf')
 
@@ -56,7 +58,12 @@ class Run(Base):
 
     def _install_daemons(self):
         cmd = ["ceph-deploy", "install", "--release", self._config_dict["version"]]
-        cmd.extend(self._config_dict["osd"]["hosts"])
+        servers = list()
+        servers.extend(self._config_dict["osd"]["hosts"])
+        servers.extend(self._config_dict["mon"])
+        servers.extend(self._config_dict["mgr"])
+        servers.extend(self._config_dict["mds"])
+        cmd.extend(list(set(servers)))
         self._execute(cmd, cwd=self._working_dir)
 
     def _create_mgr(self):
