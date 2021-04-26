@@ -32,7 +32,7 @@ class Do(Base):
         # create the working directory
         os.makedirs(self._working_dir, exist_ok=True)
 
-    def _create_mon(self):
+    def _create_mons(self):
         self._purge_mons()
         # deploy mons
         cmd = ["ceph-deploy", "new"]
@@ -70,5 +70,5 @@ class Do(Base):
         os.chdir(self._working_dir)
         self._prepare_admin()
         self._install_daemons()
-        self._create_mon()
+        self._create_mons()
         # self._create_mgr()
