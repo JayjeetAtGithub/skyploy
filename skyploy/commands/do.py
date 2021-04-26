@@ -1,5 +1,6 @@
 import os
 import yaml
+import time
 import subprocess
 
 from json import dumps
@@ -18,7 +19,6 @@ class Do(Base):
         self._execute(cmd)
 
     def _install_ceph_deploy(self):
-        # check if ceph-deploy already cloned
         if not os.path.exists("/tmp/ceph-deploy"):
             cmd = ["git", "clone", "https://github.com/JayjeetAtGithub/ceph-deploy", "/tmp/ceph-deploy"]
             self._execute(cmd)
@@ -27,14 +27,13 @@ class Do(Base):
         self._execute(cmd)
 
     def _prepare_admin(self):
-        # install ceph-deploy
         self._install_ceph_deploy()
-        # create the working directory
         os.makedirs(self._working_dir, exist_ok=True)
 
     def _create_mons(self):
         self._purge_mons()
-        # deploy mons
+        time.sleep(5)
+
         cmd = ["ceph-deploy", "new"]
         cmd.extend(self._config_dict["mon"])
         self._execute(cmd)
@@ -63,7 +62,6 @@ class Do(Base):
         pass
 
     def run(self):
-        # change into the working dir
         config_file_path = str(self.options['<config>'])
         _config_dict = self._read_config(config_file_path)
         self._config_dict = _config_dict
