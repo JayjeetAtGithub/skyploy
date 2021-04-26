@@ -28,8 +28,9 @@ class Run(Base):
         self._execute(cmd)
 
     def _prepare_admin(self):
+        shutil.rmtree(self._working_dir)
+        os.mkdir(self._working_dir)
         self._install_ceph_deploy()
-        os.makedirs(self._working_dir, exist_ok=True)
 
     def _create_mons(self):
         self._purge_mons()
