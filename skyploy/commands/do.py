@@ -14,10 +14,10 @@ class Do(Base):
     
     def _purge_cluster(self):
         cmd = ["ceph-deploy", "purgedata"]
-        cmd.extend(self.config_dict["osd"]["hosts"])
-        cmd.extend(self.config_dict["mon"])
-        cmd.extend(self.config_dict["mgr"])
-        cmd.extend(self.config_dict["mds"])
+        cmd.extend(self._config_dict["osd"]["hosts"])
+        cmd.extend(self._config_dict["mon"])
+        cmd.extend(self._config_dict["mgr"])
+        cmd.extend(self._config_dict["mds"])
         print(cmd)
         self._execute(cmd)
 
@@ -44,19 +44,19 @@ class Do(Base):
 
         # deploy mons
         cmd = ["ceph-deploy", "new"]
-        cmd.extend(self.config_dict["mon"])
+        cmd.extend(self._config_dict["mon"])
         print(cmd)
         self._execute(cmd)
 
         with open("ceph.conf", 'a') as f:
-            f.write(f"public_network = {self.config_dict['public_network']}")
+            f.write(f"public_network = {self._config_dict['public_network']}")
 
         cmd = ["ceph-deploy", "--overwrite-conf", "mon", "create-initial"]
         print(cmd)
         self._execute(cmd)
 
         cmd = ["ceph-deploy", "admin"]
-        cmd.extend(self.config_dict["mon"])
+        cmd.extend(self._config_dict["mon"])
         print(cmd)
         self._execute(cmd)
 
@@ -64,8 +64,8 @@ class Do(Base):
         # change into the working dir
         os.chdir(self._working_dir)
 
-        cmd = ["ceph-deploy", "install", "--release", self.config_dict["version"]]
-        cmd.extend(self.config_dict["osd"]["hosts"])
+        cmd = ["ceph-deploy", "install", "--release", self._config_dict["version"]]
+        cmd.extend(self._config_dict["osd"]["hosts"])
         print(cmd)
         self._execute(cmd)
 
@@ -74,7 +74,7 @@ class Do(Base):
         os.chdir(self._working_dir)
 
         cmd = ["ceph-deploy", "mgr", "create"]
-        cmd.extend(self.config_dict["mgr"])
+        cmd.extend(self._config_dict["mgr"])
         print(cmd)
         self._execute(cmd)
 
@@ -83,9 +83,9 @@ class Do(Base):
 
     def run(self):
         config_file_path = str(self.options['<config>'])
-        config_dict = self._read_config(config_file_path)
-        self.config_dict = config_dict
-        print(self.config_dict)
+        _config_dict = self._read_config(config_file_path)
+        self._config_dict = _config_dict
+        print(self._config_dict)
         self._purge_cluster()
         self._prepare_admin()
         self._install_daemons()
