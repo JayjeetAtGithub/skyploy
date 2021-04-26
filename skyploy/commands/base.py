@@ -16,6 +16,7 @@ class Base(object):
         self.options = options
         self.args = args
         self.kwargs = kwargs
+        self._working_dir = os.path.join(os.environ["HOME"], ".skyploy", "deployment")
 
     def _is_installed(self, name):
         return find_executable(name) is not None

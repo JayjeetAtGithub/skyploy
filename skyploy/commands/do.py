@@ -29,9 +29,7 @@ class Do(Base):
     def _prepare_admin(self):
         # install ceph-deploy
         self._install_ceph_deploy()
-
         # create the working directory
-        self._working_dir = os.path.join(os.environ["HOME"], ".skyploy", "deployment")
         os.makedirs(self._working_dir, exist_ok=True)
 
     def _create_mon(self):
