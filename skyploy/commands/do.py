@@ -1,6 +1,7 @@
 import os
 import yaml
 import time
+import shutil
 import subprocess
 
 from json import dumps
@@ -45,6 +46,13 @@ class Do(Base):
         cmd.extend(self._config_dict["mon"])
         self._execute(cmd)
 
+    def _copy_configs():
+        shutil.copyfile(
+            os.path.join(self._working_dir, 'ceph.conf'), '/etc/ceph/ceph.conf')
+
+        shutil.copyfile(
+            os.path.join(self._working_dir, 'ceph.client.admin.keyring'), '/etc/ceph/ceph.client.admin.keyring')
+
     def _install_daemons(self):
         cmd = ["ceph-deploy", "install", "--release", self._config_dict["version"]]
         cmd.extend(self._config_dict["osd"]["hosts"])
@@ -66,4 +74,5 @@ class Do(Base):
         self._prepare_admin()
         self._install_daemons()
         self._create_mons()
+        self._copy_configs()
         # self._create_mgr()
