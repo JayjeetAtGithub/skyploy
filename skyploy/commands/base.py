@@ -52,7 +52,7 @@ class Base(object):
 
             logging.debug(f"Code returned by process: {ecode}")
 
-        except SubprocessError as ex:
+        except subprocess.SubprocessError as ex:
             output = ""
             if not ecode:
                 ecode = 1
