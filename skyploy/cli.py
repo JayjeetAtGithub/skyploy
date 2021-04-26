@@ -2,7 +2,7 @@
 skyploy
 
 Usage:
-  skyploy do <config>
+  skyploy run <config>
   skyploy grafana
   skyploy -h | --help
   skyploy --version

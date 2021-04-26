@@ -8,7 +8,7 @@ from json import dumps
 from .base import Base
 
 
-class Do(Base):
+class Run(Base):
     def _read_config(self, filepath):
         with open(filepath, 'r') as f:
             data = yaml.load(f, Loader=yaml.FullLoader)
@@ -46,7 +46,7 @@ class Do(Base):
         cmd.extend(self._config_dict["mon"])
         self._execute(cmd)
 
-    def _copy_configs():
+    def _copy_config(self):
         shutil.copyfile(
             os.path.join(self._working_dir, 'ceph.conf'), '/etc/ceph/ceph.conf')
 
@@ -74,5 +74,5 @@ class Do(Base):
         self._prepare_admin()
         self._install_daemons()
         self._create_mons()
-        self._copy_configs()
+        self._copy_config()
         # self._create_mgr()
