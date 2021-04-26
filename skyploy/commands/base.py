@@ -17,7 +17,7 @@ class Base(object):
         self.args = args
         self.kwargs = kwargs
 
-    def _is_installed(name):
+    def _is_installed(self, name):
         return find_executable(name) is not None
 
     def _check_not_ok(self, e, msg):
