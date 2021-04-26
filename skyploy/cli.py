@@ -2,7 +2,7 @@
 skyploy
 
 Usage:
-  skyploy run <config>
+  skyploy run
   skyploy grafana
   skyploy -h | --help
   skyploy --version
@@ -12,8 +12,8 @@ Options:
   --version                         Show version.
 
 Examples:
-  skyploy do .skyploy.yaml
- 
+  skyploy do
+
 Help:
   For help using this tool, please open an issue on the Github repository:
   https://github.com/JayjeetAtGithub/skyploy

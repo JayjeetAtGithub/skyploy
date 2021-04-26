@@ -75,7 +75,7 @@ class Run(Base):
         pass
 
     def run(self):
-        config_file_path = str(self.options['<config>'])
+        config_file_path = ".skyploy.yaml"
         _config_dict = self._read_config(config_file_path)
         self._config_dict = _config_dict
         self._prepare_admin()
