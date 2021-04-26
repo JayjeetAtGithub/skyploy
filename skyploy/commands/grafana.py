@@ -32,6 +32,8 @@ class Grafana(Base):
         self._check_not_ok(e, "failed to start grafana container")
 
     def run(self):
-        self._is_installed('docker')
+        if not self._is_installed('docker'):
+            print('docker needs to be installed')
+            sys.exit(1)
         self._start_prometheus()
         self._start_grafana()
