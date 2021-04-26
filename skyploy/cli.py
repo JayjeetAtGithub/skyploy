@@ -3,6 +3,7 @@ skyploy
 
 Usage:
   skyploy do <config>
+  skyploy grafana
   skyploy -h | --help
   skyploy --version
 
