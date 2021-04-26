@@ -28,10 +28,10 @@ class Base(object):
         pid = 0
         ecode = None
         try:
-            with Popen(
+            with subprocess.Popen(
                 cmd,
-                stdout=PIPE,
-                stderr=STDOUT,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
                 universal_newlines=True,
                 preexec_fn=os.setsid,
                 env=env,
