@@ -21,10 +21,10 @@ class Base(object):
             sys.exit(e)
 
     def _execute(self, cmd, env=None, cwd=os.getcwd(), pids=set(), log=True):
-        if os.environ['DEV']:
+        if os.environ.get('DEV', None):
             logging.info(cmd)
             return 0, 0, ""
-        
+
         pid = 0
         ecode = None
         try:
