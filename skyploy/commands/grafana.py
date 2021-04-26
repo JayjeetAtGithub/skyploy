@@ -33,7 +33,6 @@ class Grafana(Base):
 
     def run(self):
         if not self._is_installed('docker'):
-            print('docker needs to be installed')
-            sys.exit(1)
+            self._exit('please install docker')
         self._start_prometheus()
         self._start_grafana()

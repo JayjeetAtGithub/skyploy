@@ -25,6 +25,10 @@ class Base(object):
             logging.error(msg)
             sys.exit(e)
 
+    def _exit(self, msg):
+        logging.error(msg)
+        sys.exit(1)
+
     def _execute(self, cmd, env=None, cwd=os.getcwd(), pids=set(), log=True):
         if os.environ.get('DEV', None):
             logging.info(cmd)
