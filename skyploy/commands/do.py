@@ -64,10 +64,10 @@ class Do(Base):
 
     def run(self):
         # change into the working dir
-        os.chdir(self._working_dir)
         config_file_path = str(self.options['<config>'])
         _config_dict = self._read_config(config_file_path)
         self._config_dict = _config_dict
+        os.chdir(self._working_dir)
         self._prepare_admin()
         self._install_daemons()
         self._create_mon()
