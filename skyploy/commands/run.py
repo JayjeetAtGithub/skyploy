@@ -82,4 +82,4 @@ class Run(Base):
         self._install_daemons()
         self._create_mons()
         self._copy_config()
-        # self._create_mgr()
+        self._create_mgr()

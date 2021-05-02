@@ -25,3 +25,10 @@ osd:
     type: bluestore
     size: 50GB
     disk: /dev/nvmen01p4
+
+fs:
+  client_fs: cephfs
+  data_pool: cephfs_data
+  metadata_pool: cephfs_metadata
+  data_pool_pg_count: 16
+  metadata_pool_pg_count: 16

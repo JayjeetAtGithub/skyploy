@@ -1,5 +1,5 @@
 """
-skyploy
+skyploy - An end-to-end automated deployment tool for SkyhookDM.
 
 Usage:
   skyploy run
@@ -12,7 +12,10 @@ Options:
   --version                         Show version.
 
 Examples:
-  skyploy do
+  skyploy run
+
+Note: 
+  This tool should be only used with `sudo`.
 
 Help:
   For help using this tool, please open an issue on the Github repository:
