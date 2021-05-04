@@ -16,12 +16,10 @@ class Run(Base):
         cluster_nodes.extend(self._config_dict["osd"]["hosts"])
         cluster_nodes = list(set(cluster_nodes))
 
-        for node in cluster_nodes:
-            cmd = ["ssh", node, "rm -rf /var/lib/ceph"]
-            self._execute(cmd)
-
-            cmd = ["ssh", node, "rm -rf /var/log/ceph"]
-            self._execute(cmd)
+        cmd = ["ceph-deploy", "purge"]
+        cmd.extend(cluster_nodes)
+        _, e, _ = self._execute(cmd, cwd=self._working_dir)
+        self._check_not_ok(e, "purge the existing ceph cluster")
 
     def _install_ceph_deploy(self):
         if not os.path.exists("/tmp/ceph-deploy"):
