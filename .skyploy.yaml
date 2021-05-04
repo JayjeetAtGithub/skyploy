@@ -1,8 +1,5 @@
 version: octopus
 
-admin:
-- node0
-
 mon:
 - node1
 - node2
@@ -22,7 +19,6 @@ osd:
   - node3
   - node4
   conf:
-    type: bluestore
     disk: /dev/nvmen01p4
 
 fs:
