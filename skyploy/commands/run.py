@@ -53,8 +53,7 @@ class Run(Base):
         osd_nodes = self._config_dict["osd"]["hosts"]
         for node in osd_nodes:
             cmd = f"ssh {node} ceph-volume lvm zap {self._config_dict['osd']['conf']['disk']} --destroy"
-            _, e, _ = self._execute(cmd.split(), cwd=self._working_dir)
-            self._check_not_ok(e, "failed to zap osd")
+            self._execute(cmd.split(), cwd=self._working_dir)
 
             time.sleep(1)
 
