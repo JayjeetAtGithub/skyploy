@@ -39,9 +39,9 @@ class Run(Base):
                 f"ceph auth del osd.{i}"
             ]
             for cmd in cmds:
-                self._execute(cmd)
+                self._execute(cmd.split())
 
-        cmd = ["ceph-deploy", "purge"]
+        cmd = ["ceph-deploy", "purgedata"]
         cmd.extend(cluster_nodes)
         _, e, _ = self._execute(cmd, cwd=self._working_dir)
         self._check_not_ok(e, "purge the existing ceph cluster")
