@@ -26,7 +26,7 @@ class Run(Base):
     def _prepare_admin(self):
         if not self._is_dev():
             shutil.rmtree(self._working_dir, ignore_errors=True)
-            os.mkdir(self._working_dir)
+            os.makedirs(self._working_dir)
         self._install_ceph_deploy()
 
     def _create_osds(self):
