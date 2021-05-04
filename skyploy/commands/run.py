@@ -26,6 +26,10 @@ class Run(Base):
     def _copy_config(self):
         if self._is_dev():
             return
+        cmd = ["apt", "install", "-y", "ceph-common"]
+        _, e, _ = self._execute(cmd)
+        self._check_not_ok(e, "failed to install the ceph-common package")
+
         shutil.copyfile(
             os.path.join(self._working_dir, 'ceph.conf'), '/etc/ceph/ceph.conf')
 
