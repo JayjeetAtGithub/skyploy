@@ -8,12 +8,6 @@ from .base import Base
 
 
 class Run(Base):
-    def _purge_mons(self):
-        cmd = ["ceph-deploy", "mon", "destroy"]
-        cmd.extend(self._config_dict["mon"])
-        _, e, _ = self._execute(cmd, cwd=self._working_dir)
-        self._check_not_ok(e, "failed to purge mons")
-
     def _install_ceph_deploy(self):
         if not os.path.exists("/tmp/ceph-deploy"):
             cmd = ["git", "clone", "https://github.com/JayjeetAtGithub/ceph-deploy", "/tmp/ceph-deploy"]
@@ -29,6 +23,15 @@ class Run(Base):
             os.makedirs(self._working_dir)
         self._install_ceph_deploy()
 
+    def _copy_config(self):
+        if self._is_dev():
+            return
+        shutil.copyfile(
+            os.path.join(self._working_dir, 'ceph.conf'), '/etc/ceph/ceph.conf')
+
+        shutil.copyfile(
+            os.path.join(self._working_dir, 'ceph.client.admin.keyring'), '/etc/ceph/ceph.client.admin.keyring')
+
     def _create_osds(self):
         osd_nodes = self._config_dict["osd"]["hosts"]
         for node in osd_nodes:
@@ -37,7 +40,11 @@ class Run(Base):
             self._check_not_ok(e, "failed to create osd")
 
     def _create_mons(self):
-        self._purge_mons()
+        cmd = ["ceph-deploy", "mon", "destroy"]
+        cmd.extend(self._config_dict["mon"])
+        _, e, _ = self._execute(cmd, cwd=self._working_dir)
+        self._check_not_ok(e, "failed to purge mons")
+        
         time.sleep(5)
 
         cmd = ["ceph-deploy", "new"]
@@ -54,15 +61,6 @@ class Run(Base):
         _, e, _ = self._execute(cmd, cwd=self._working_dir)
         self._check_not_ok(e, "ceph-deploy admin command failed")
 
-    def _copy_config(self):
-        if self._is_dev():
-            return
-        shutil.copyfile(
-            os.path.join(self._working_dir, 'ceph.conf'), '/etc/ceph/ceph.conf')
-
-        shutil.copyfile(
-            os.path.join(self._working_dir, 'ceph.client.admin.keyring'), '/etc/ceph/ceph.client.admin.keyring')
-
     def _install_daemons(self):
         cmd = ["ceph-deploy", "install", "--release", self._config_dict["version"]]
         servers = list()
@@ -75,6 +73,13 @@ class Run(Base):
         self._check_not_ok(e, "failed to install ceph daemons")
 
     def _create_mgr(self):
+        cmd = ["ceph-deploy", "mgr", "destroy"]
+        cmd.extend(self._config_dict["mgr"])
+        _, e, _ = self._execute(cmd, cwd=self._working_dir)
+        self._check_not_ok(e, "failed to purge mgrs")
+
+        time.sleep(5)
+
         cmd = ["ceph-deploy", "mgr", "create"]
         cmd.extend(self._config_dict["mgr"])
         _, e, _ = self._execute(cmd, cwd=self._working_dir)
