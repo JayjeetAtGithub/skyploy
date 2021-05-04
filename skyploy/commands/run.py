@@ -52,7 +52,7 @@ class Run(Base):
     def _create_osds(self):
         osd_nodes = self._config_dict["osd"]["hosts"]
         for node in osd_nodes:
-            cmd = f"ssh {node} ceph-volume lvm zap {self._config_dict['osd']['conf']['disk']} --destroy"
+            cmd = f"ssh {node} ceph-volume lvm zap {self._config_dict['osd']['conf']['disk']}"
             self._execute(cmd.split(), cwd=self._working_dir)
 
             time.sleep(1)
