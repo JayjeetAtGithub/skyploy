@@ -4,6 +4,7 @@ skyploy - An end-to-end automated deployment tool for SkyhookDM.
 Usage:
   skyploy run
   skyploy grafana
+  skyploy fs
   skyploy -h | --help
   skyploy --version
 

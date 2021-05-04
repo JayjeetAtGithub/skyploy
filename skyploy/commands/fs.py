@@ -1,5 +1,6 @@
 import os
 import yaml
+import shutil
 import subprocess
 
 from json import dumps
@@ -36,4 +37,19 @@ class Fs(Base):
         self._execute(cmd)
 
     def _mount(self):
-        os.makedirs(self._config_dict["cephfs_mount_path"], exists_ok=True)
+        cmd = f"umount -uz {self._config_dict['fs']['path']}"
+        self._execute(cmd.split())
+
+        cmd = f"rm -rf {self._config_dict['fs']['path']}"
+        self._execute(cmd.split())
+
+        cmd = f"mkdir -p {self._config_dict['fs']['path']}"
+        self._execute(cmd.split())
+
+        cmd = f"ceph-fuse {self._config_dict['fs']['path']}"
+        self._execute(cmd.split())
+
+    def run(self):
+        self._deploy_mds()
+        self._deploy_cephfs()
+        self._mount()

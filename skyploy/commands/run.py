@@ -1,5 +1,4 @@
 import os
-import yaml
 import time
 import shutil
 import subprocess
@@ -9,11 +8,6 @@ from .base import Base
 
 
 class Run(Base):
-    def _read_config(self, filepath):
-        with open(filepath, 'r') as f:
-            data = yaml.load(f, Loader=yaml.FullLoader)
-            return data
-
     def _purge_mons(self):
         cmd = ["ceph-deploy", "mon", "destroy"]
         cmd.extend(self._config_dict["mon"])
@@ -28,9 +22,16 @@ class Run(Base):
         self._execute(cmd)
 
     def _prepare_admin(self):
-        shutil.rmtree(self._working_dir, ignore_errors=True)
-        os.mkdir(self._working_dir)
+        if not self._is_dev():
+            shutil.rmtree(self._working_dir, ignore_errors=True)
+            os.mkdir(self._working_dir)
         self._install_ceph_deploy()
+
+    def _create_osds(self):
+        osd_nodes = self._config_dict["osd"]["hosts"]
+        for node in osd_nodes:
+            cmd = f"ceph-deploy osd create  --data {self._config_dict['osd']['conf']['disk']} {node}"
+            self._execute(cmd.split())
 
     def _create_mons(self):
         self._purge_mons()
@@ -75,11 +76,9 @@ class Run(Base):
         pass
 
     def run(self):
-        config_file_path = ".skyploy.yaml"
-        _config_dict = self._read_config(config_file_path)
-        self._config_dict = _config_dict
         self._prepare_admin()
         self._install_daemons()
         self._create_mons()
         self._copy_config()
         self._create_mgr()
+        self._create_osds()

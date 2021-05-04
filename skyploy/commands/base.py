@@ -3,6 +3,8 @@ import sys
 import subprocess
 import logging
 
+import yaml
+
 from distutils.spawn import find_executable
 
 
@@ -17,6 +19,12 @@ class Base(object):
         self.args = args
         self.kwargs = kwargs
         self._working_dir = os.path.join(os.environ["HOME"], ".skyploy", "deployment")
+        self._config_dict = self._read_config()
+
+    def _read_config(self, filepath=".skyploy.yaml"):
+        with open(filepath, 'r') as f:
+            data = yaml.load(f, Loader=yaml.FullLoader)
+            return data
 
     def _is_installed(self, name):
         return find_executable(name) is not None

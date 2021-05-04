@@ -23,10 +23,10 @@ osd:
   - node4
   conf:
     type: bluestore
-    size: 50GB
     disk: /dev/nvmen01p4
 
 fs:
+  path: /mnt/cephfs
   client_fs: cephfs
   data_pool: cephfs_data
   metadata_pool: cephfs_metadata
