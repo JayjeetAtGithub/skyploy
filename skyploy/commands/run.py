@@ -16,19 +16,6 @@ class Run(Base):
         cluster_nodes.extend(self._config_dict["osd"]["hosts"])
         cluster_nodes = list(set(cluster_nodes))
 
-        for node in cluster_nodes:
-            cmd = ["ssh", node, "pkill", "ceph-mon"]
-            self._execute(cmd)
-
-            cmd = ["ssh", node, "pkill", "ceph-osd"]
-            self._execute(cmd)
-            
-            cmd = ["ssh", node, "pkill", "ceph-mds"]
-            self._execute(cmd)
-            
-            cmd = ["ssh", node, "pkill", "ceph-mgr"]
-            self._execute(cmd)
-
         osd_count = len(self._config_dict["osd"]["hosts"])
         for i in range(osd_count):
             cmds = [
