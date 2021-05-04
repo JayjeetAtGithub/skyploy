@@ -8,6 +8,21 @@ from .base import Base
 
 
 class Run(Base):
+    def _cleanup(self):
+        cluster_nodes = list()
+        self.cluster_nodes.extend(self._config_dict["mon"])
+        self.cluster_nodes.extend(self._config_dict["mgr"])
+        self.cluster_nodes.extend(self._config_dict["mds"])
+        self.cluster_nodes.extend(self._config_dict["osd"]["hosts"])
+        self.cluster_nodes = list(set(self.cluster_nodes))
+
+        for node in nodes:
+            cmd = ["ssh", node, "rm -rf /var/lib/ceph"]
+            self._execute(cmd)
+
+            cmd = ["ssh", node, "rm -rf /var/log/ceph"]
+            self._execute(cmd)
+
     def _install_ceph_deploy(self):
         if not os.path.exists("/tmp/ceph-deploy"):
             cmd = ["git", "clone", "https://github.com/JayjeetAtGithub/ceph-deploy", "/tmp/ceph-deploy"]
@@ -82,6 +97,7 @@ class Run(Base):
         self._check_not_ok(e, "failed to create mgrs")
 
     def run(self):
+        self._cleanup()
         self._prepare_admin()
         self._install_daemons()
         self._create_mons()
