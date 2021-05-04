@@ -47,7 +47,6 @@ class Run(Base):
         cmd = ["ceph-deploy", "mon", "destroy"]
         cmd.extend(self._config_dict["mon"])
         _, e, _ = self._execute(cmd, cwd=self._working_dir)
-        self._check_not_ok(e, "failed to purge mons")
         
         time.sleep(5)
 
