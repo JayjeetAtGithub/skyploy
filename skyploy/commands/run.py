@@ -11,7 +11,8 @@ class Run(Base):
     def _purge_mons(self):
         cmd = ["ceph-deploy", "mon", "destroy"]
         cmd.extend(self._config_dict["mon"])
-        self._execute(cmd)
+        _, e, _ = self._execute(cmd, cwd=self._working_dir)
+        self._check_not_ok(e, "failed to purge mons")
 
     def _install_ceph_deploy(self):
         if not os.path.exists("/tmp/ceph-deploy"):
@@ -19,7 +20,8 @@ class Run(Base):
             self._execute(cmd)
 
         cmd = ["pip3", "install", "--upgrade", "/tmp/ceph-deploy"]
-        self._execute(cmd)
+        _, e, _ = self._execute(cmd)
+        self._check_not_ok(e, "failed to install ceph-deploy")
 
     def _prepare_admin(self):
         if not self._is_dev():
@@ -31,7 +33,8 @@ class Run(Base):
         osd_nodes = self._config_dict["osd"]["hosts"]
         for node in osd_nodes:
             cmd = f"ceph-deploy osd create  --data {self._config_dict['osd']['conf']['disk']} {node}"
-            self._execute(cmd.split())
+            _, e, _ = self._execute(cmd.split(), cwd=self._working_dir)
+            self._check_not_ok(e, "failed to create osd")
 
     def _create_mons(self):
         self._purge_mons()
@@ -39,14 +42,17 @@ class Run(Base):
 
         cmd = ["ceph-deploy", "new"]
         cmd.extend(self._config_dict["mon"])
-        self._execute(cmd, cwd=self._working_dir)
+        _, e, _ = self._execute(cmd, cwd=self._working_dir)
+        self._check_not_ok(e, "ceph-deploy new command failed")
 
         cmd = ["ceph-deploy", "--overwrite-conf", "mon", "create-initial"]
-        self._execute(cmd, cwd=self._working_dir)
+        _, e, _ = self._execute(cmd, cwd=self._working_dir)
+        self._check_not_ok(e, "ceph-deploy mon create initial command failed")
 
         cmd = ["ceph-deploy", "admin"]
         cmd.extend(self._config_dict["mon"])
-        self._execute(cmd, cwd=self._working_dir)
+        _, e, _ = self._execute(cmd, cwd=self._working_dir)
+        self._check_not_ok(e, "ceph-deploy admin command failed")
 
     def _copy_config(self):
         if self._is_dev():
@@ -65,15 +71,14 @@ class Run(Base):
         servers.extend(self._config_dict["mgr"])
         servers.extend(self._config_dict["mds"])
         cmd.extend(list(set(servers)))
-        self._execute(cmd, cwd=self._working_dir)
+        _, e, _ = self._execute(cmd, cwd=self._working_dir)
+        self._check_not_ok(e, "failed to install ceph daemons")
 
     def _create_mgr(self):
         cmd = ["ceph-deploy", "mgr", "create"]
         cmd.extend(self._config_dict["mgr"])
-        self._execute(cmd, cwd=self._working_dir)
-
-    def _create_mds(self):
-        pass
+        _, e, _ = self._execute(cmd, cwd=self._working_dir)
+        self._check_not_ok(e, "failed to create mgrs")
 
     def run(self):
         self._prepare_admin()
