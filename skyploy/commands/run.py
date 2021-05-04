@@ -16,6 +16,31 @@ class Run(Base):
         cluster_nodes.extend(self._config_dict["osd"]["hosts"])
         cluster_nodes = list(set(cluster_nodes))
 
+        for node in cluster_nodes:
+            cmd = ["ssh", node, "pkill", "ceph-mon"]
+            self._execute(cmd)
+
+            cmd = ["ssh", node, "pkill", "ceph-osd"]
+            self._execute(cmd)
+            
+            cmd = ["ssh", node, "pkill", "ceph-mds"]
+            self._execute(cmd)
+            
+            cmd = ["ssh", node, "pkill", "ceph-mgr"]
+            self._execute(cmd)
+
+        osd_count = len(self._config_dict["osd"]["hosts"])
+        for i in range(osd_count):
+            cmds = [
+                f"ceph osd out osd.{i}",
+                f"ceph osd down osd.{i}",
+                f"ceph osd rm osd.{i}",
+                f"ceph osd crush rm osd.{i}",
+                f"ceph auth del osd.{i}"
+            ]
+            for cmd in cmds:
+                self._execute(cmd)
+
         cmd = ["ceph-deploy", "purge"]
         cmd.extend(cluster_nodes)
         _, e, _ = self._execute(cmd, cwd=self._working_dir)
@@ -25,6 +50,10 @@ class Run(Base):
         if not os.path.exists("/tmp/ceph-deploy"):
             cmd = ["git", "clone", "https://github.com/JayjeetAtGithub/ceph-deploy", "/tmp/ceph-deploy"]
             self._execute(cmd)
+
+        cmd = ["apt", "install", "-y", "ceph-common", "ceph-fuse"]
+        _, e, _ = self._execute(cmd)
+        self._check_not_ok(e, "failed to install the ceph-common package")
 
         cmd = ["pip3", "install", "--upgrade", "/tmp/ceph-deploy"]
         _, e, _ = self._execute(cmd)
@@ -39,10 +68,7 @@ class Run(Base):
     def _copy_config(self):
         if self._is_dev():
             return
-        cmd = ["apt", "install", "-y", "ceph-common", "ceph-fuse"]
-        _, e, _ = self._execute(cmd)
-        self._check_not_ok(e, "failed to install the ceph-common package")
-
+        
         shutil.copyfile(
             os.path.join(self._working_dir, 'ceph.conf'), '/etc/ceph/ceph.conf')
 
