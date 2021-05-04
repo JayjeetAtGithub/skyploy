@@ -17,14 +17,14 @@ class Fs(Base):
         cmd = [
             "ceph", "osd", "pool", "create", 
             self._config_dict["fs"]["data_pool"],
-            int(self._config_dict["fs"]["data_pool_pg_count"])
+            f"{int(self._config_dict['fs']['data_pool_pg_count'])}"
         ]
         self._execute(cmd)
 
         cmd = [
             "ceph", "osd", "pool", "create", 
             self._config_dict["fs"]["metadata_pool"],
-            int(self._config_dict["fs"]["metadata_pool_pg_count"]) 
+            f"{int(self._config_dict['fs']['metadata_pool_pg_count'])}"
         ]
         self._execute(cmd)
 
