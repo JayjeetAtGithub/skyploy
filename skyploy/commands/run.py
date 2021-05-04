@@ -77,13 +77,6 @@ class Run(Base):
         self._check_not_ok(e, "failed to install ceph daemons")
 
     def _create_mgr(self):
-        cmd = ["ceph-deploy", "mgr", "destroy"]
-        cmd.extend(self._config_dict["mgr"])
-        _, e, _ = self._execute(cmd, cwd=self._working_dir)
-        self._check_not_ok(e, "failed to purge mgrs")
-
-        time.sleep(5)
-
         cmd = ["ceph-deploy", "mgr", "create"]
         cmd.extend(self._config_dict["mgr"])
         _, e, _ = self._execute(cmd, cwd=self._working_dir)
