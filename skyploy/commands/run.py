@@ -10,13 +10,13 @@ from .base import Base
 class Run(Base):
     def _cleanup(self):
         cluster_nodes = list()
-        self.cluster_nodes.extend(self._config_dict["mon"])
-        self.cluster_nodes.extend(self._config_dict["mgr"])
-        self.cluster_nodes.extend(self._config_dict["mds"])
-        self.cluster_nodes.extend(self._config_dict["osd"]["hosts"])
-        self.cluster_nodes = list(set(self.cluster_nodes))
+        cluster_nodes.extend(self._config_dict["mon"])
+        cluster_nodes.extend(self._config_dict["mgr"])
+        cluster_nodes.extend(self._config_dict["mds"])
+        cluster_nodes.extend(self._config_dict["osd"]["hosts"])
+        cluster_nodes = list(set(cluster_nodes))
 
-        for node in nodes:
+        for node in cluster_nodes:
             cmd = ["ssh", node, "rm -rf /var/lib/ceph"]
             self._execute(cmd)
 
